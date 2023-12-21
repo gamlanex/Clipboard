@@ -1,0 +1,2075 @@
+package MainApl;
+
+import java.util.LinkedList;
+
+import javax.bluetooth.RemoteDevice;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CaretEvent;
+import org.eclipse.swt.custom.CaretListener;
+import org.eclipse.swt.custom.LineStyleEvent;
+import org.eclipse.swt.custom.LineStyleListener;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.VerifyKeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ColorDialog;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FontDialog;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Slider;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.MyGroup;
+import org.eclipse.wb.swt.SWTResourceManager;
+
+import Utils.Apl;
+
+public class AplWin {
+
+	public Label		lblMyIp		= null;
+	public Display		display;
+	public TabItem		tbtmEscpServer_1;
+	public TabItem		tbtmBackOffice_1;
+	public TabItem		tbtmSsh;
+	private Text		txtTabletIP;
+	private Text		txtKeepAlivePort;
+	public Table		table;
+
+	private Composite	composite	= null;
+	private Shell		shlEssim;
+	private Text		txtRegularPort;
+	private StyledText	mainConStyledText;
+	private Button		btnCheckButton;
+	private Text		terminalIpText;
+	private StyledText	sshConStyledText;
+	private Button		btnEsConnectServerActive;
+	private Text		sshUserName;
+	private Text		sshPassword;
+	private Text		txtcfgmescprivip;
+	private Button		btnMarking;
+	private StyledText	smallConStyledText;
+	private Label		lblMs;
+	private Slider		respDelaySlider;
+	private Text		winScpText;
+	private String		searchStringForSsh;
+	private String		searchStringForSsh2;
+	private Text		textSearach1;
+	private StyledText	backConStyledText;
+	private Button		btnConnect;
+	private Text		textSearch2;
+	private Label		lblProductFilter;
+	private Label		lblRecordFilter;
+	private Group		grpSessionOpen;
+	private MyGroup		_grpSessionOpen;
+	private MyGroup		_grpSessionClose;
+	private MyGroup		_grpPing;
+	private MyGroup		_grpFinancialTransaction;
+	private MyGroup		_grpValidationInquiry;
+	private Button		btnEsmmConsoleNotActive;
+	private Button		btnResetSzybkieDrawTime;
+	private StyledText  styledText;	
+
+	public AplWin() {
+		open();
+	}
+
+	public void open() {
+		display = Display.getDefault();
+
+		shlEssim = new Shell();
+		shlEssim.setImage(SWTResourceManager.getImage(AplWin.class, "/icons/frog.ico"));
+		shlEssim.setMinimumSize(new Point(800, 220));
+		shlEssim.setAlpha(249);
+		shlEssim.setModified(true);
+		shlEssim.setSize(863, 563);
+		shlEssim.setText("FROG");
+		shlEssim.setLayout(new FormLayout());
+
+		composite = new Composite(shlEssim, SWT.BORDER);
+		composite.setFont(SWTResourceManager.getFont("Segoe UI", 15, SWT.NORMAL));
+		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
+		final FormData fd_composite = new FormData();
+		fd_composite.left = new FormAttachment(0);
+		fd_composite.right = new FormAttachment(100);
+		fd_composite.top = new FormAttachment(100, -34);
+		fd_composite.bottom = new FormAttachment(100, -10);
+		composite.setLayoutData(fd_composite);
+
+		//Font defFont = new Font( composite.getDisplay(), new FontData("Arial", 15, SWT.NORMAL) );
+		//composite.setFont(defFont);
+
+		TabFolder tabFolder = new TabFolder(shlEssim, SWT.BORDER);
+		tabFolder.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
+		tabFolder.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		FormData fd_tabFolder = new FormData();
+		fd_tabFolder.bottom = new FormAttachment(composite, -6);
+
+		lblMyIp = new Label(composite, SWT.NONE);
+		lblMyIp.setText("IP: 0.0.0.0         ");
+		fd_tabFolder.top = new FormAttachment(0);
+		fd_tabFolder.left = new FormAttachment(0);
+		fd_tabFolder.right = new FormAttachment(100);
+		tabFolder.setLayoutData(fd_tabFolder);
+
+		TabFolder tabFolder_2 = new TabFolder(tabFolder, SWT.NONE);
+
+		tbtmEscpServer_1 = new TabItem(tabFolder, SWT.NONE);
+		tbtmEscpServer_1.setImage(SWTResourceManager.getImage(AplWin.class, "/icons/ball.gif"));
+		tbtmEscpServer_1.setText("Cash Register");
+
+		Composite composite_14 = new Composite(tabFolder, SWT.NONE);
+		tbtmEscpServer_1.setControl(composite_14);
+		composite_14.setLayout(new FillLayout(SWT.HORIZONTAL));
+
+		TabFolder tabFolder_3 = new TabFolder(composite_14, SWT.NONE);
+		tabFolder_3.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+
+		TabItem tbtmConfiguration_1 = new TabItem(tabFolder_3, SWT.NONE);
+		tbtmConfiguration_1.setText("Configuration");
+
+		SashForm sashForm_1 = new SashForm(tabFolder_3, SWT.VERTICAL);
+		tbtmConfiguration_1.setControl(sashForm_1);
+
+		SashForm sashForm_2 = new SashForm(sashForm_1, SWT.NONE);
+
+		Composite composite_4 = new Composite(sashForm_2, SWT.BORDER);
+		composite_4.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
+		composite_4.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		composite_4.setLayout(new FormLayout());
+
+		txtTabletIP = new Text(composite_4, SWT.BORDER);
+		FormData fd_txtTestcfg = new FormData();
+		txtTabletIP.setLayoutData(fd_txtTestcfg);
+
+		txtKeepAlivePort = new Text(composite_4, SWT.BORDER);
+		txtKeepAlivePort.setText("9876");
+		FormData fd_txtEscpudpmulticast = new FormData();
+		txtKeepAlivePort.setLayoutData(fd_txtEscpudpmulticast);
+
+		Label lblNewLabel = new Label(composite_4, SWT.NONE);
+		fd_txtTestcfg.right = new FormAttachment(lblNewLabel, 170, SWT.RIGHT);
+		fd_txtTestcfg.top = new FormAttachment(lblNewLabel, -3, SWT.TOP);
+		fd_txtTestcfg.left = new FormAttachment(lblNewLabel, 25);
+		FormData fd_lblNewLabel = new FormData();
+		fd_lblNewLabel.top = new FormAttachment(0, 10);
+		fd_lblNewLabel.left = new FormAttachment(0, 10);
+		lblNewLabel.setLayoutData(fd_lblNewLabel);
+		lblNewLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		lblNewLabel.setText("Lottery tablet IP:");
+
+		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
+		fd_txtEscpudpmulticast.left = new FormAttachment(lblNewLabel_3, 71);
+		FormData fd_lblNewLabel_3 = new FormData();
+		fd_lblNewLabel_3.top = new FormAttachment(txtKeepAlivePort, 3, SWT.TOP);
+		fd_lblNewLabel_3.left = new FormAttachment(lblNewLabel, 0, SWT.LEFT);
+		lblNewLabel_3.setLayoutData(fd_lblNewLabel_3);
+		lblNewLabel_3.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		lblNewLabel_3.setText("Keep alive port");
+
+		Label lblNewLabel_5 = new Label(composite_4, SWT.NONE);
+		FormData fd_lblNewLabel_5 = new FormData();
+		fd_lblNewLabel_5.top = new FormAttachment(lblNewLabel_3, 12);
+		fd_lblNewLabel_5.left = new FormAttachment(lblNewLabel, 0, SWT.LEFT);
+		lblNewLabel_5.setLayoutData(fd_lblNewLabel_5);
+		lblNewLabel_5.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		lblNewLabel_5.setText("Regular msg port");
+
+		txtRegularPort = new Text(composite_4, SWT.BORDER);
+		fd_txtEscpudpmulticast.bottom = new FormAttachment(txtRegularPort, -6);
+		FormData fd_text_5 = new FormData();
+		fd_text_5.right = new FormAttachment(txtTabletIP, 0, SWT.RIGHT);
+		fd_text_5.left = new FormAttachment(lblNewLabel_5, 58);
+		txtRegularPort.setLayoutData(fd_text_5);
+		txtRegularPort.setText("9870");
+
+		Button btnSave = new Button(composite_4, SWT.NONE);
+		btnSave.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+		btnSave.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Apl.frogSUi.save();
+				Apl.genericUi.save();
+			}
+		});
+		FormData fd_btnSave = new FormData();
+		fd_btnSave.right = new FormAttachment(0, 280);
+		btnSave.setLayoutData(fd_btnSave);
+		btnSave.setText("Save");
+
+		btnEsConnectServerActive = new Button(composite_4, SWT.CHECK | SWT.CENTER);
+		btnEsConnectServerActive.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		fd_btnSave.top = new FormAttachment(0, 246);
+		btnEsConnectServerActive.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Button button = (Button) e.widget;
+				Apl.frogSUi.runKeepAliveServer(button.getSelection());
+			}
+		});
+		FormData fd_btnRun = new FormData();
+		fd_btnRun.top = new FormAttachment(0, 250);
+		btnEsConnectServerActive.setLayoutData(fd_btnRun);
+		btnEsConnectServerActive.setText("Keep Alive");
+		fd_btnRun.left = new FormAttachment(0, 324);
+
+		respDelaySlider = new Slider(composite_4, SWT.NONE);
+		respDelaySlider.setPageIncrement(100);
+		respDelaySlider.setMaximum(50000);
+		respDelaySlider.setMinimum(5);
+		respDelaySlider.setSelection(5000);
+		respDelaySlider.setIncrement(100);
+		FormData fd_respDelaySlider = new FormData();
+		fd_respDelaySlider.right = new FormAttachment(0, 167);
+		fd_respDelaySlider.top = new FormAttachment(0, 254);
+		fd_respDelaySlider.left = new FormAttachment(0, 10);
+		respDelaySlider.setLayoutData(fd_respDelaySlider);
+		respDelaySlider.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				Slider s = (Slider) e.widget;
+				lblMs.setText(String.format("%5d ms.", s.getSelection()));
+			}
+		});
+
+		lblMs = new Label(composite_4, SWT.NONE);
+		fd_btnSave.left = new FormAttachment(0, 233);
+		FormData fd_lblMs = new FormData();
+		fd_lblMs.right = new FormAttachment(0, 227);
+		fd_lblMs.top = new FormAttachment(0, 251);
+		fd_lblMs.left = new FormAttachment(0, 174);
+		lblMs.setLayoutData(fd_lblMs);
+		lblMs.setText("5000 ms.");
+
+		Label lblDealy = new Label(composite_4, SWT.NONE);
+		FormData fd_lblDealy = new FormData();
+		fd_lblDealy.top = new FormAttachment(0, 233);
+		fd_lblDealy.left = new FormAttachment(0, 10);
+		lblDealy.setLayoutData(fd_lblDealy);
+		lblDealy.setText("Delay time");
+
+		Label lblNewLabel_8 = new Label(composite_4, SWT.SHADOW_NONE | SWT.RIGHT);
+		fd_txtEscpudpmulticast.right = new FormAttachment(lblNewLabel_8, -34);
+		fd_text_5.bottom = new FormAttachment(lblNewLabel_8, 0, SWT.BOTTOM);
+		lblNewLabel_8.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent arg0) {
+				Apl.frogSUi.checkIpReachable();
+			}
+		});
+		lblNewLabel_8.setImage(SWTResourceManager.getImage(AplWin.class, "/icons/frog.png"));
+		FormData fd_lblNewLabel_8 = new FormData();
+		fd_lblNewLabel_8.top = new FormAttachment(txtTabletIP, 0, SWT.TOP);
+		fd_lblNewLabel_8.right = new FormAttachment(btnEsConnectServerActive, 0, SWT.RIGHT);
+		lblNewLabel_8.setLayoutData(fd_lblNewLabel_8);
+
+		Button btnServer = new Button(composite_4, SWT.CHECK | SWT.CENTER);
+		btnServer.setSelection(true);
+		btnServer.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Button button = (Button) e.widget;
+				Apl.frogSUi.runZabkaServer(button.getSelection());
+			}
+		});
+		btnServer.setText("Server");
+		btnServer.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		FormData fd_btnServer = new FormData();
+		fd_btnServer.top = new FormAttachment(0, 228);
+		fd_btnServer.left = new FormAttachment(0, 324);
+		btnServer.setLayoutData(fd_btnServer);
+
+		lblNewLabel_1 = new Label(composite_4, SWT.NONE);
+		lblNewLabel_1.setImage(SWTResourceManager.getImage(AplWin.class, "/icons/RedBall.png"));
+		FormData fd_lblNewLabel_1 = new FormData();
+		fd_lblNewLabel_1.bottom = new FormAttachment(txtTabletIP, 0, SWT.BOTTOM);
+		fd_lblNewLabel_1.right = new FormAttachment(lblNewLabel_8, -6);
+		fd_lblNewLabel_1.top = new FormAttachment(0, 10);
+		fd_lblNewLabel_1.left = new FormAttachment(0, 274);
+		lblNewLabel_1.setLayoutData(fd_lblNewLabel_1);
+
+		Button btnTabletSearchButton = new Button(composite_4, SWT.NONE);
+		btnTabletSearchButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				Apl.frogSUi.lookForTablet();
+			}
+		});
+		FormData fd_btnTabletSearchButton = new FormData();
+		fd_btnTabletSearchButton.left = new FormAttachment(0, 10);
+		fd_btnTabletSearchButton.bottom = new FormAttachment(lblDealy, -15);
+		btnTabletSearchButton.setLayoutData(fd_btnTabletSearchButton);
+		btnTabletSearchButton.setText("Tablet search");
+
+		label = new Label(composite_4, SWT.BORDER);
+		fd_btnTabletSearchButton.right = new FormAttachment(label, -16);
+		label.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_RED));
+		label.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		label.setAlignment(SWT.CENTER);
+		FormData fd_label = new FormData();
+		fd_label.right = new FormAttachment(0, 167);
+		fd_label.left = new FormAttachment(0, 112);
+		fd_label.bottom = new FormAttachment(btnTabletSearchButton, 0, SWT.BOTTOM);
+		fd_label.top = new FormAttachment(btnTabletSearchButton, 0, SWT.TOP);
+		label.setLayoutData(fd_label);
+		label.setText("                ");
+
+		Composite composite_3 = new Composite(sashForm_2, SWT.BORDER);
+		composite_3.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		composite_3.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		composite_3.setLayout(new FormLayout());
+
+		smallConStyledText = new StyledText(composite_3, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		smallConStyledText.setFont(SWTResourceManager.getFont("Lucida Console", 9, SWT.NORMAL));
+		FormData fd_smallConStyledText = new FormData();
+		fd_smallConStyledText.bottom = new FormAttachment(100, -41);
+		fd_smallConStyledText.top = new FormAttachment(0, 10);
+		fd_smallConStyledText.right = new FormAttachment(100, -10);
+		fd_smallConStyledText.left = new FormAttachment(0, 10);
+		smallConStyledText.setLayoutData(fd_smallConStyledText);
+
+		Button btnNewButton_10 = new Button(composite_3, SWT.NONE);
+		btnNewButton_10.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		btnNewButton_10.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				smallConStyledText.selectAll();
+				smallConStyledText.cut();
+			}
+		});
+		FormData fd_btnNewButton_10 = new FormData();
+		fd_btnNewButton_10.right = new FormAttachment(0, 64);
+		fd_btnNewButton_10.bottom = new FormAttachment(100, -10);
+		fd_btnNewButton_10.left = new FormAttachment(0, 10);
+		btnNewButton_10.setLayoutData(fd_btnNewButton_10);
+		btnNewButton_10.setText("Clear");
+		sashForm_2.setWeights(new int[] { 414, 350 });
+
+		table = new Table(sashForm_1, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		table.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		table.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		table.setLinesVisible(true);
+		table.setHeaderVisible(true);
+		table.addListener(SWT.MeasureItem, new Listener() {
+			public void handleEvent(Event event) {
+				event.height = 24;
+			}
+		});
+		TableColumn tblclmnIpport = new TableColumn(table, SWT.NONE);
+		tblclmnIpport.setWidth(167);
+		tblclmnIpport.setText(" IP");
+
+		TableColumn tblclmnMessage = new TableColumn(table, SWT.NONE);
+		tblclmnMessage.setWidth(250);
+		tblclmnMessage.setText("Message");
+
+		TableColumn tblclmnRomId = new TableColumn(table, SWT.NONE);
+		tblclmnRomId.setText("Time");
+		tblclmnRomId.setWidth(171);
+
+		TableColumn tblclmnStatus = new TableColumn(table, SWT.NONE);
+		tblclmnStatus.setWidth(500);
+		sashForm_1.setWeights(new int[] { 294, 114 });
+
+		TabItem tbtmConsole = new TabItem(tabFolder_3, SWT.NONE);
+		tbtmConsole.setText("Console");
+
+		Composite composite_17 = new Composite(tabFolder_3, SWT.NONE);
+		tbtmConsole.setControl(composite_17);
+		composite_17.setLayout(new FormLayout());
+
+		Button btnClear_5 = new Button(composite_17, SWT.NONE);
+		btnClear_5.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				mainConStyledText.selectAll();
+				mainConStyledText.cut();
+			}
+		});
+		FormData fd_btnClear_5 = new FormData();
+		fd_btnClear_5.right = new FormAttachment(0, 82);
+		fd_btnClear_5.left = new FormAttachment(0, 10);
+		fd_btnClear_5.bottom = new FormAttachment(100, -10);
+		btnClear_5.setLayoutData(fd_btnClear_5);
+		btnClear_5.setText("Clear");
+
+		mainConStyledText = new StyledText(composite_17, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		//		styledText_3.addLineStyleListener(new LineStyleListener() {
+		//			public void lineGetStyle(LineStyleEvent arg0) {
+		//				Apl.escpUi.getStyleforHexDump(arg0, display);
+		//			}
+		//		});
+		fd_btnClear_5.top = new FormAttachment(mainConStyledText, 5);
+		mainConStyledText.setFont(SWTResourceManager.getFont("Lucida Console", 9, SWT.NORMAL));
+		FormData fd_mainConStyledText = new FormData();
+		fd_mainConStyledText.bottom = new FormAttachment(100, -40);
+		fd_mainConStyledText.top = new FormAttachment(0, 10);
+		fd_mainConStyledText.right = new FormAttachment(100, -10);
+		fd_mainConStyledText.left = new FormAttachment(0, 10);
+		mainConStyledText.setLayoutData(fd_mainConStyledText);
+
+		btnCheckButton = new Button(composite_17, SWT.CHECK);
+		FormData fd_btnCheckButton = new FormData();
+		fd_btnCheckButton.left = new FormAttachment(btnClear_5, 13);
+		fd_btnCheckButton.top = new FormAttachment(mainConStyledText, 9);
+		btnCheckButton.setLayoutData(fd_btnCheckButton);
+		btnCheckButton.setText("Messages dump");
+
+		lblProductFilter = new Label(composite_17, SWT.NONE);
+		FormData fd_lblProductFilter = new FormData();
+		fd_lblProductFilter.left = new FormAttachment(btnCheckButton, 279);
+		fd_lblProductFilter.top = new FormAttachment(btnClear_5, 5, SWT.TOP);
+		lblProductFilter.setLayoutData(fd_lblProductFilter);
+		lblProductFilter.setText("                                             ");
+
+		lblRecordFilter = new Label(composite_17, SWT.NONE);
+		fd_lblProductFilter.right = new FormAttachment(lblRecordFilter, -87);
+		FormData fd_lblRecordFilter = new FormData();
+		fd_lblRecordFilter.left = new FormAttachment(0, 727);
+		fd_lblRecordFilter.right = new FormAttachment(100, -10);
+		fd_lblRecordFilter.top = new FormAttachment(mainConStyledText, 10);
+		lblRecordFilter.setLayoutData(fd_lblRecordFilter);
+		lblRecordFilter.setText("            ");
+
+		TabItem tbtmResponses = new TabItem(tabFolder_3, SWT.NONE);
+		tbtmResponses.setText("Responses");
+
+		Composite composite_5 = new Composite(tabFolder_3, SWT.NONE);
+		composite_5.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		tbtmResponses.setControl(composite_5);
+
+		//-1--------------------------
+		grpSessionOpen = new Group(composite_5, SWT.NONE);
+		_grpSessionOpen = new MyGroup();
+		grpSessionOpen.setText("Session Open");
+		grpSessionOpen.setBounds(10, 10, 129, 50);
+
+		Button btn11 = new Button(grpSessionOpen, SWT.RADIO);
+		_grpSessionOpen.add(btn11);
+		btn11.setSelection(true);
+		btn11.setBounds(10, 20, 44, 16);
+		btn11.setText("OK");
+
+		Button btn12 = new Button(grpSessionOpen, SWT.RADIO);
+		_grpSessionOpen.add(btn12);
+		btn12.setBounds(62, 20, 45, 16);
+		btn12.setText("Busy");
+
+		//-2--------------------------
+		grpSessionClose = new Group(composite_5, SWT.NONE);
+		_grpSessionClose = new MyGroup();
+		grpSessionClose.setText("Session Close");
+		grpSessionClose.setBounds(10, 66, 129, 50);
+
+		Button btn21 = new Button(grpSessionClose, SWT.RADIO);
+		_grpSessionClose.add(btn21);
+		btn21.setSelection(true);
+		btn21.setBounds(10, 24, 44, 16);
+		btn21.setText("OK");
+
+		Button btn22 = new Button(grpSessionClose, SWT.RADIO);
+		_grpSessionClose.add(btn22);
+		btn22.setBounds(65, 24, 45, 16);
+		btn22.setText("Busy");
+
+		//-3--------------------------
+		grpPing = new Group(composite_5, SWT.NONE);
+		_grpPing = new MyGroup();
+		grpPing.setText("Ping");
+		grpPing.setBounds(10, 178, 129, 50);
+
+		Button btn31 = new Button(grpPing, SWT.RADIO);
+		_grpPing.add(btn31);
+		btn31.setSelection(true);
+		btn31.setBounds(10, 24, 44, 16);
+		btn31.setText("OK");
+
+		Button btn32 = new Button(grpPing, SWT.RADIO);
+		_grpPing.add(btn32);
+		btn32.setBounds(62, 24, 45, 16);
+		btn32.setText("Busy");
+
+		//-4--------------------------
+		grpFinancialTransaction = new Group(composite_5, SWT.NONE);
+		_grpFinancialTransaction = new MyGroup();
+		grpFinancialTransaction.setText("Sales");
+		grpFinancialTransaction.setBounds(10, 122, 193, 50);
+
+		Button btn41 = new Button(grpFinancialTransaction, SWT.RADIO);
+		_grpFinancialTransaction.add(btn41);
+		btn41.setSelection(true);
+		btn41.setBounds(10, 24, 44, 16);
+		btn41.setText("OK");
+
+		Button btn42 = new Button(grpFinancialTransaction, SWT.RADIO);
+		_grpFinancialTransaction.add(btn42);
+		btn42.setBounds(60, 24, 45, 16);
+		btn42.setText("Busy");
+
+		Button btn55 = new Button(grpFinancialTransaction, SWT.RADIO);
+		_grpFinancialTransaction.add(btn55);
+		btn55.setText("No resp.");
+		btn55.setBounds(111, 24, 65, 16);
+
+		//-5--------------------------
+		grpValidationInquiry = new Group(composite_5, SWT.NONE);
+		_grpValidationInquiry = new MyGroup();
+		grpValidationInquiry.setText("Validation Inquiry");
+		grpValidationInquiry.setBounds(145, 10, 202, 50);
+
+		Button btn51 = new Button(grpValidationInquiry, SWT.RADIO);
+		_grpValidationInquiry.add(btn51);
+		btn51.setSelection(true);
+		btn51.setBounds(10, 24, 44, 16);
+		btn51.setText("OK");
+
+		Button btn52 = new Button(grpValidationInquiry, SWT.RADIO);
+		_grpValidationInquiry.add(btn52);
+		btn52.setBounds(73, 24, 66, 16);
+		btn52.setText("No Cash");
+
+		Button btn53 = new Button(grpValidationInquiry, SWT.RADIO);
+		_grpValidationInquiry.add(btn53);
+		btn53.setBounds(143, 24, 45, 16);
+		btn53.setText("Busy");
+
+		//---------------------------
+
+		btnDoNotRespond = new Button(composite_5, SWT.CHECK);
+		btnDoNotRespond.setBounds(10, 275, 113, 16);
+		btnDoNotRespond.setText("Do not respond");
+
+		tbtmBackOffice_1 = new TabItem(tabFolder, SWT.NONE);
+		tbtmBackOffice_1.setImage(SWTResourceManager.getImage(AplWin.class, "/icons/ball.gif"));
+		tbtmBackOffice_1.setText("Back Office");
+
+		TabFolder tabFolder_1 = new TabFolder(tabFolder, SWT.NONE);
+		tabFolder_1.setSelection(2);
+		tabFolder_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		tabFolder_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		tbtmBackOffice_1.setControl(tabFolder_1);
+
+		TabItem tbtmConfiguration = new TabItem(tabFolder_1, SWT.NONE);
+		tbtmConfiguration.setText("Configuration");
+
+		Composite composite_20 = new Composite(tabFolder_1, SWT.NONE);
+		tbtmConfiguration.setControl(composite_20);
+		composite_20.setLayout(new FillLayout(SWT.HORIZONTAL));
+
+		SashForm sashForm_8 = new SashForm(composite_20, SWT.NONE);
+
+		Composite composite_21 = new Composite(sashForm_8, SWT.BORDER);
+		composite_21.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
+		composite_21.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		composite_21.setLayout(new FormLayout());
+
+		textBackRemotePort = new Text(composite_21, SWT.BORDER | SWT.RIGHT);
+		FormData fd_textBackRemotePort = new FormData();
+		textBackRemotePort.setLayoutData(fd_textBackRemotePort);
+
+		Label lblRemotePort = new Label(composite_21, SWT.NONE);
+		fd_textBackRemotePort.right = new FormAttachment(lblRemotePort, 71, SWT.RIGHT);
+		fd_textBackRemotePort.top = new FormAttachment(lblRemotePort, -3, SWT.TOP);
+		fd_textBackRemotePort.left = new FormAttachment(lblRemotePort, 6);
+		lblRemotePort.setText("Remote port:");
+		lblRemotePort.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		FormData fd_lblRemotePort = new FormData();
+		fd_lblRemotePort.left = new FormAttachment(0, 10);
+		fd_lblRemotePort.top = new FormAttachment(0, 10);
+		lblRemotePort.setLayoutData(fd_lblRemotePort);
+
+		Label lblLocalPort = new Label(composite_21, SWT.NONE);
+		lblLocalPort.setText("Local port:");
+		lblLocalPort.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		FormData fd_lblLocalPort = new FormData();
+		fd_lblLocalPort.top = new FormAttachment(lblRemotePort, 6);
+		fd_lblLocalPort.left = new FormAttachment(lblRemotePort, 0, SWT.LEFT);
+		lblLocalPort.setLayoutData(fd_lblLocalPort);
+
+		textBackLocalPort = new Text(composite_21, SWT.BORDER | SWT.RIGHT);
+		FormData fd_textBackLocalPort = new FormData();
+		fd_textBackLocalPort.right = new FormAttachment(lblLocalPort, 84, SWT.RIGHT);
+		fd_textBackLocalPort.top = new FormAttachment(textBackRemotePort, 6);
+		fd_textBackLocalPort.left = new FormAttachment(lblLocalPort, 19);
+		textBackLocalPort.setLayoutData(fd_textBackLocalPort);
+
+		chkBackServer = new Button(composite_21, SWT.CHECK | SWT.CENTER);
+		chkBackServer.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Button button = (Button) e.widget;
+				Apl.genericUi.actBackServer(button.getSelection());
+			}
+		});
+		chkBackServer.setText("Server");
+		chkBackServer.setSelection(true);
+		chkBackServer.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		FormData fd_chkBackServer = new FormData();
+		fd_chkBackServer.top = new FormAttachment(lblLocalPort, 14);
+		fd_chkBackServer.left = new FormAttachment(lblRemotePort, 0, SWT.LEFT);
+		chkBackServer.setLayoutData(fd_chkBackServer);
+
+		lblBackRemoteRealPort = new Label(composite_21, SWT.NONE);
+		lblBackRemoteRealPort.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+		FormData fd_lblBackRemoteRealPort = new FormData();
+		fd_lblBackRemoteRealPort.top = new FormAttachment(textBackLocalPort, 27);
+		fd_lblBackRemoteRealPort.right = new FormAttachment(textBackRemotePort, -14, SWT.RIGHT);
+		fd_lblBackRemoteRealPort.left = new FormAttachment(textBackRemotePort, 0, SWT.LEFT);
+		lblBackRemoteRealPort.setLayoutData(fd_lblBackRemoteRealPort);
+		lblBackRemoteRealPort.setText("         0");
+
+		Label lblNewLabel_7 = new Label(composite_21, SWT.NONE);
+		lblNewLabel_7.setImage(SWTResourceManager.getImage(AplWin.class, "/icons/frog1.png"));
+		FormData fd_lblNewLabel_7 = new FormData();
+		fd_lblNewLabel_7.top = new FormAttachment(lblBackRemoteRealPort, 6);
+		fd_lblNewLabel_7.bottom = new FormAttachment(0, 410);
+		fd_lblNewLabel_7.right = new FormAttachment(100, -10);
+		fd_lblNewLabel_7.left = new FormAttachment(0, 10);
+		lblNewLabel_7.setLayoutData(fd_lblNewLabel_7);
+
+		Composite composite_1 = new Composite(sashForm_8, SWT.BORDER);
+		composite_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		composite_1.setLayout(new FormLayout());
+
+		backConStyledText = new StyledText(composite_1, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		FormData fd_backConStyledText = new FormData();
+		fd_backConStyledText.top = new FormAttachment(0, 10);
+		fd_backConStyledText.right = new FormAttachment(100, -10);
+		backConStyledText.setLayoutData(fd_backConStyledText);
+
+		Button clearBackFrogConButton = new Button(composite_1, SWT.NONE);
+		fd_backConStyledText.bottom = new FormAttachment(clearBackFrogConButton, -6);
+		fd_backConStyledText.left = new FormAttachment(clearBackFrogConButton, 0, SWT.LEFT);
+		clearBackFrogConButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				backConStyledText.selectAll();
+				backConStyledText.cut();
+			}
+		});
+		FormData fd_clearBackFrogConButton = new FormData();
+		fd_clearBackFrogConButton.right = new FormAttachment(0, 69);
+		fd_clearBackFrogConButton.bottom = new FormAttachment(100, -10);
+		fd_clearBackFrogConButton.left = new FormAttachment(0, 10);
+		clearBackFrogConButton.setLayoutData(fd_clearBackFrogConButton);
+		clearBackFrogConButton.setText("Clear");
+		sashForm_8.setWeights(new int[] {192, 632});
+
+		TabItem tbtmControl = new TabItem(tabFolder_1, SWT.NONE);
+		tbtmControl.setText("Messages");
+
+		Composite composite_9 = new Composite(tabFolder_1, SWT.NONE);
+		tbtmControl.setControl(composite_9);
+		composite_9.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		composite_9.setLayout(new FillLayout(SWT.HORIZONTAL));
+
+		SashForm sashForm_6 = new SashForm(composite_9, SWT.VERTICAL);
+
+		Composite composite_12 = new Composite(sashForm_6, SWT.NONE);
+		composite_12.setLayout(new FillLayout(SWT.HORIZONTAL));
+
+		SashForm sashForm_5 = new SashForm(composite_12, SWT.NONE);
+
+		TabFolder tabFolder_4 = new TabFolder(sashForm_5, SWT.BOTTOM);
+		tabFolder_4.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.ITALIC));
+
+		TabItem tbtmResponseForTablet = new TabItem(tabFolder_4, SWT.NONE);
+		tbtmResponseForTablet.setText("Msg. Response");
+
+		Composite composite_13 = new Composite(tabFolder_4, SWT.NONE);
+		composite_13.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		tbtmResponseForTablet.setControl(composite_13);
+		composite_13.setLayout(new FormLayout());
+
+		backRespStyledText = new StyledText(composite_13, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		FormData fd_backRespStyledText = new FormData();
+		fd_backRespStyledText.top = new FormAttachment(0, 10);
+		fd_backRespStyledText.bottom = new FormAttachment(100, -10);
+		fd_backRespStyledText.left = new FormAttachment(0, 10);
+		fd_backRespStyledText.right = new FormAttachment(100, -10);
+		backRespStyledText.setLayoutData(fd_backRespStyledText);
+		backRespStyledText.setText("{\r\n\"protocol_ver\": 0,\r\n\"seq_num\":%d,\r\n\"msg_type\": \"IPS_L_RESP\",\r\n\"status\":\"ERR\",\r\n\"note_body\":\"--- Paczka nie moze byc przyjeta---\"\r\n}\r\n");
+
+		TabItem tbtmPintResp = new TabItem(tabFolder_4, SWT.NONE);
+		tbtmPintResp.setText("Ping Resp.");
+
+		Composite composite_10 = new Composite(tabFolder_4, SWT.NONE);
+		composite_10.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		tbtmPintResp.setControl(composite_10);
+		composite_10.setLayout(new FormLayout());
+
+		pingRespStyledText = new StyledText(composite_10, SWT.BORDER);
+		pingRespStyledText.setText(
+				"{\r\n\"protocol_ver\": 0,\r\n\"seq_num\":%d,\r\n\"msg_type\": \"PING_RESP\",\r\n\"result\": \"OK\"\r\n}\r\n");
+		FormData fd_pingRespStyledText = new FormData();
+		fd_pingRespStyledText.bottom = new FormAttachment(100, -10);
+		fd_pingRespStyledText.right = new FormAttachment(100, -10);
+		fd_pingRespStyledText.top = new FormAttachment(0, 10);
+		fd_pingRespStyledText.left = new FormAttachment(0, 10);
+		pingRespStyledText.setLayoutData(fd_pingRespStyledText);
+
+		TabItem tbtmRqeuestToTablet = new TabItem(tabFolder_4, SWT.NONE);
+		tbtmRqeuestToTablet.setText("Rqeuest to Tablet");
+
+		Composite composite_2 = new Composite(tabFolder_4, SWT.NONE);
+		tbtmRqeuestToTablet.setControl(composite_2);
+		composite_2.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		composite_2.setLayout(new FormLayout());
+
+		backReqStyledText = new StyledText(composite_2, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		FormData fd_backReqStyledText = new FormData();
+		fd_backReqStyledText.top = new FormAttachment(0, 10);
+		fd_backReqStyledText.left = new FormAttachment(0, 10);
+		fd_backReqStyledText.right = new FormAttachment(100, -10);
+		backReqStyledText.setLayoutData(fd_backReqStyledText);
+		backReqStyledText.setText(
+				"{\r\n\"protocol_ver\": 0,\r\n\"seq_num\": 1,\r\n\"prs_number\" : 234,\r\n\"msg_type\": \"IPS_Z\",\r\n\"type\": 1,\r\n\"boxes\" :\r\n[\r\n{\r\n\"product_number\" : \"5786587658765\",  \r\n\"pack_number\" : 123 ,\r\n}\r\n]\r\n}\r\n");
+		backReqStyledText.setMarginColor(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+
+		Button btnBackMsgSend = new Button(composite_2, SWT.NONE);
+		fd_backReqStyledText.bottom = new FormAttachment(100, -40);
+		FormData fd_btnBackMsgSend = new FormData();
+		fd_btnBackMsgSend.width = 50;
+		fd_btnBackMsgSend.bottom = new FormAttachment(100, -9);
+		fd_btnBackMsgSend.right = new FormAttachment(100, -10);
+		btnBackMsgSend.setLayoutData(fd_btnBackMsgSend);
+		btnBackMsgSend.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				display.syncExec(new Runnable() {
+					@Override
+					public void run() {
+						Apl.backFrogServer.set2SendDefaultBackRequestMsg();
+					}
+				});
+			}
+		});
+		btnBackMsgSend.setText("Send");
+
+		Label lblNewLabel_6 = new Label(composite_2, SWT.NONE);
+		lblNewLabel_6.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
+		FormData fd_lblNewLabel_6 = new FormData();
+		fd_lblNewLabel_6.top = new FormAttachment(backReqStyledText, 6);
+		fd_lblNewLabel_6.left = new FormAttachment(backReqStyledText, 0, SWT.LEFT);
+		lblNewLabel_6.setLayoutData(fd_lblNewLabel_6);
+		lblNewLabel_6.setText("Mark message to send with block");
+
+		TabItem tbtmPingReq = new TabItem(tabFolder_4, SWT.NONE);
+		tbtmPingReq.setText("Ping Req.");
+
+		Composite composite_15 = new Composite(tabFolder_4, SWT.NONE);
+		composite_15.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		tbtmPingReq.setControl(composite_15);
+		composite_15.setLayout(new FormLayout());
+
+		pingReqStyledText = new StyledText(composite_15, SWT.BORDER);
+		pingReqStyledText.setText("{\r\n\"protocol_ver\": 0,\r\n\"seq_num\":1,\r\n\"msg_type\": \"PING\",\r\n}\r\n");
+		FormData fd_pingReqStyledText = new FormData();
+		fd_pingReqStyledText.top = new FormAttachment(0, 10);
+		fd_pingReqStyledText.right = new FormAttachment(100, -10);
+		fd_pingReqStyledText.left = new FormAttachment(0, 10);
+		pingReqStyledText.setLayoutData(fd_pingReqStyledText);
+
+		Button btnSendPing = new Button(composite_15, SWT.NONE);
+		btnSendPing.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				display.syncExec(new Runnable() {
+					@Override
+					public void run() {
+						// PING SEND
+						Apl.backFrogServer.set2SendRequestPingMsg();						
+					}
+				});
+			}
+		});
+		fd_pingReqStyledText.bottom = new FormAttachment(100, -41);
+		FormData fd_btnSendPing = new FormData();
+		fd_btnSendPing.left = new FormAttachment(100, -63);
+		fd_btnSendPing.bottom = new FormAttachment(100, -10);
+		fd_btnSendPing.right = new FormAttachment(100, -10);
+		btnSendPing.setLayoutData(fd_btnSendPing);
+		btnSendPing.setText("Send");
+		
+		TabItem tbtmNote = new TabItem(tabFolder_4, 0);
+		tbtmNote.setText("Note");
+		
+		Composite composite_16 = new Composite(tabFolder_4, SWT.NONE);
+		composite_16.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		tbtmNote.setControl(composite_16);
+		composite_16.setLayout(new FormLayout());
+		
+		noteReqStyledText = new StyledText(composite_16, SWT.BORDER);
+		noteReqStyledText.setLayoutData(new FormData());
+		noteReqStyledText.setText("{\r\n\"protocol_ver\": 0,\r\n\"seq_num\":1,\r\n\"msg_type\": \"NOTE\",\r\nnotes: [\r\n{\r\n\"type\":\"SET\",\r\n\"note_id\":1,\r\n\"note\":\"--- msg A ---\"\r\n},\r\n{\r\n\"type\":\"DEL\",\r\n\"note_id\":2,\r\n\"note\":\"--- msg B ---\"\r\n}\r\n]\r\n}\r\n");
+		FormData fd_noteReqStyledText = new FormData();
+		fd_noteReqStyledText.bottom = new FormAttachment(100, -41);
+		fd_noteReqStyledText.top = new FormAttachment(0, 10);
+		fd_noteReqStyledText.right = new FormAttachment(100, -10);
+		fd_noteReqStyledText.left = new FormAttachment(0, 10);
+		noteReqStyledText.setLayoutData(fd_noteReqStyledText);
+		
+		Button button_1 = new Button(composite_16, SWT.NONE);
+		button_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				// NOTE SEND
+				Apl.backFrogServer.set2SendRequestNoteMsg();		
+			}
+		});
+		button_1.setText("Send");
+		FormData fd_button_1 = new FormData();
+		fd_button_1.bottom = new FormAttachment(100, -10);
+		fd_button_1.right = new FormAttachment(100, -10);
+		fd_button_1.left = new FormAttachment(100, -63);
+		button_1.setLayoutData(fd_button_1);
+
+		Composite composite_11 = new Composite(sashForm_5, SWT.BORDER);
+		composite_11.setLayout(new FormLayout());
+
+		backSmallConStyledText = new StyledText(composite_11, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+
+		Button btnClearBackSmallCon = new Button(composite_11, SWT.NONE);
+		btnClearBackSmallCon.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				backSmallConStyledText.selectAll();
+				backSmallConStyledText.cut();
+			}
+		});
+		FormData fd_btnClearBackSmallCon = new FormData();
+		fd_btnClearBackSmallCon.top = new FormAttachment(backSmallConStyledText, 6);
+		fd_btnClearBackSmallCon.right = new FormAttachment(backSmallConStyledText, 0, SWT.RIGHT);
+		fd_btnClearBackSmallCon.height = 25;
+		fd_btnClearBackSmallCon.width = 50;
+		fd_btnClearBackSmallCon.left = new FormAttachment(100, -71);
+		btnClearBackSmallCon.setLayoutData(fd_btnClearBackSmallCon);
+		btnClearBackSmallCon.setText("  Clear  ");
+
+		FormData fd_backSmallConStyledText = new FormData();
+		fd_backSmallConStyledText.bottom = new FormAttachment(100, -41);
+		fd_backSmallConStyledText.left = new FormAttachment(0, 10);
+		fd_backSmallConStyledText.right = new FormAttachment(100, -10);
+		backSmallConStyledText.setLayoutData(fd_backSmallConStyledText);
+
+		Label lblNewLabel_4 = new Label(composite_11, SWT.NONE);
+		fd_backSmallConStyledText.top = new FormAttachment(lblNewLabel_4, 6);
+		FormData fd_lblNewLabel_4 = new FormData();
+		fd_lblNewLabel_4.top = new FormAttachment(0, 10);
+		fd_lblNewLabel_4.left = new FormAttachment(0, 10);
+		lblNewLabel_4.setLayoutData(fd_lblNewLabel_4);
+		lblNewLabel_4.setText("Console:");
+		sashForm_5.setWeights(new int[] { 366, 458 });
+		sashForm_6.setWeights(new int[] { 289 });
+
+		TabItem tbtmEsmm = new TabItem(tabFolder, 0);
+		tbtmEsmm.setText(" Esmm/Http");
+
+		SashForm sashForm = new SashForm(tabFolder, SWT.NONE);
+		tbtmEsmm.setControl(sashForm);
+
+		Composite composite_6 = new Composite(sashForm, SWT.BORDER);
+		composite_6.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		composite_6.setLayout(new FillLayout(SWT.HORIZONTAL));
+
+		SashForm sashForm_4 = new SashForm(composite_6, SWT.NONE);
+
+		Composite composite_7 = new Composite(sashForm_4, SWT.NONE);
+		composite_7.setLayout(new FormLayout());
+
+		esmmConStyledText = new StyledText(composite_7, SWT.WRAP | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		FormData fd_esmmConStyledText = new FormData();
+		fd_esmmConStyledText.top = new FormAttachment(0, 10);
+		fd_esmmConStyledText.left = new FormAttachment(0, 10);
+		fd_esmmConStyledText.right = new FormAttachment(100, -10);
+		esmmConStyledText.setLayoutData(fd_esmmConStyledText);
+		esmmConStyledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		esmmConStyledText.setFont(SWTResourceManager.getFont("Consolas", 9, SWT.NORMAL));
+		esmmConStyledText.setSelectionBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_BLUE));
+
+		Button buttonEsmmClear = new Button(composite_7, SWT.NONE);
+		FormData fd_buttonEsmmClear = new FormData();
+		fd_buttonEsmmClear.top = new FormAttachment(esmmConStyledText, 37);
+		buttonEsmmClear.setLayoutData(fd_buttonEsmmClear);
+		buttonEsmmClear.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				StyledText st = esmmConStyledText;
+				st.selectAll();
+				st.cut();
+			}
+		});
+		buttonEsmmClear.setText("Clear");
+
+		textEsmmPort = new Text(composite_7, SWT.BORDER);
+		fd_buttonEsmmClear.right = new FormAttachment(textEsmmPort, 56, SWT.RIGHT);
+		fd_buttonEsmmClear.left = new FormAttachment(textEsmmPort, 6);
+		FormData fd_textEsmmPort = new FormData();
+		textEsmmPort.setLayoutData(fd_textEsmmPort);
+		textEsmmPort.setText("8080");
+
+		Label lblPort = new Label(composite_7, SWT.NONE);
+		fd_textEsmmPort.right = new FormAttachment(lblPort, 76, SWT.RIGHT);
+		fd_textEsmmPort.left = new FormAttachment(lblPort, 6);
+		FormData fd_lblPort = new FormData();
+		lblPort.setLayoutData(fd_lblPort);
+		lblPort.setText("Port: ");
+
+		btnResetKenoDrawTime = new Button(composite_7, SWT.NONE);
+		btnResetKenoDrawTime.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int m = 0, s = 0;
+
+				try {
+					m = Integer.parseInt(textKenoMins.getText());
+				}
+				catch (Exception e) {
+					m = 0;
+					textKenoMins.setText("0");
+				}
+
+				try {
+					s = Integer.parseInt(textKenoSecs.getText());
+				}
+				catch (Exception e) {
+					s = 0;
+					textKenoSecs.setText("0");
+				}
+
+				//System.out.println("Mins="+m+" Sec="+s);				
+				Apl.genericUi.resetKenoDrawTime((m * 60 + s) * 1000);
+			}
+		});
+		FormData fd_btnResetKenoDrawTime = new FormData();
+		fd_btnResetKenoDrawTime.right = new FormAttachment(0, 94);
+		fd_btnResetKenoDrawTime.left = new FormAttachment(0, 10);
+		btnResetKenoDrawTime.setLayoutData(fd_btnResetKenoDrawTime);
+		btnResetKenoDrawTime.setText("Keno : --:--");
+
+		textKenoMins = new Text(composite_7, SWT.BORDER);
+		textKenoMins.setText("4");
+		FormData fd_textKenoMins = new FormData();
+		fd_textKenoMins.bottom = new FormAttachment(100, -10);
+		fd_textKenoMins.width = 20;
+		textKenoMins.setLayoutData(fd_textKenoMins);
+
+		textKenoSecs = new Text(composite_7, SWT.BORDER);
+		fd_lblPort.left = new FormAttachment(textKenoSecs, 22);
+		textKenoSecs.setText("0");
+		FormData fd_textKenoSecs = new FormData();
+		fd_textKenoSecs.right = new FormAttachment(0, 284);
+		fd_textKenoSecs.bottom = new FormAttachment(100, -10);
+		fd_textKenoSecs.left = new FormAttachment(0, 256);
+		textKenoSecs.setLayoutData(fd_textKenoSecs);
+
+		btnResetSzybkieDrawTime = new Button(composite_7, SWT.NONE);
+		fd_textKenoMins.left = new FormAttachment(0, 217);
+		btnResetSzybkieDrawTime.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int m = 0, s = 0;
+
+				try {
+					m = Integer.parseInt(textKenoMins.getText());
+				}
+				catch (Exception e) {
+					m = 0;
+					textKenoMins.setText("0");
+				}
+
+				try {
+					s = Integer.parseInt(textKenoSecs.getText());
+				}
+				catch (Exception e) {
+					s = 0;
+					textKenoSecs.setText("0");
+				}
+
+				//System.out.println("Mins="+m+" Sec="+s);				
+				Apl.genericUi.resetSzybkieDrawTime((m * 60 + s) * 1000);
+			}
+		});
+		btnResetSzybkieDrawTime.setText("Szybkie : --:--");
+		FormData fd_btnResetSzybkieDrawTime = new FormData();
+		fd_btnResetSzybkieDrawTime.right = new FormAttachment(btnResetKenoDrawTime, 101, SWT.RIGHT);
+		fd_btnResetSzybkieDrawTime.left = new FormAttachment(btnResetKenoDrawTime, 6);
+		btnResetSzybkieDrawTime.setLayoutData(fd_btnResetSzybkieDrawTime);
+		
+		Button btnGetFileSystemPath = new Button(composite_7, SWT.NONE);
+		btnGetFileSystemPath.setToolTipText("Directory path where the HTTP Server \r\nresponse files are located");
+		fd_esmmConStyledText.bottom = new FormAttachment(100, -70);
+		btnGetFileSystemPath.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				DirectoryDialog dlg = new DirectoryDialog(shlEssim);
+				dlg.setFilterPath(textShowPath.getText());
+				dlg.setText("ESSIM BIN Files");
+				dlg.setMessage("Select BINs directory");
+				String dir = dlg.open();
+				if (dir != null) {
+					textShowPath.setText(dir);
+					Apl.esmmHTTPServer.scanFileSystem(dir);
+				}
+			}
+		});
+		FormData fd_btnGetFileSystemPath = new FormData();
+		btnGetFileSystemPath.setLayoutData(fd_btnGetFileSystemPath);
+		btnGetFileSystemPath.setText("HTTP File System");
+		
+		textShowPath = new Text(composite_7, SWT.BORDER);
+		fd_btnGetFileSystemPath.right = new FormAttachment(textShowPath, 118, SWT.RIGHT);
+		fd_btnGetFileSystemPath.top = new FormAttachment(textShowPath, -2, SWT.TOP);
+		fd_btnGetFileSystemPath.left = new FormAttachment(textShowPath, 6);
+		fd_btnResetSzybkieDrawTime.top = new FormAttachment(textShowPath, 6);
+		fd_btnResetKenoDrawTime.top = new FormAttachment(textShowPath, 6);
+		fd_lblPort.top = new FormAttachment(textShowPath, 11);
+		fd_textEsmmPort.top = new FormAttachment(textShowPath, 8);
+		FormData fd_textShowPath = new FormData();
+		fd_textShowPath.right = new FormAttachment(100, -128);
+		fd_textShowPath.left = new FormAttachment(0, 10);
+		fd_textShowPath.bottom = new FormAttachment(100, -39);
+		textShowPath.setLayoutData(fd_textShowPath);
+
+		Composite composite_8 = new Composite(sashForm_4, SWT.NONE);
+		composite_8.setLayout(new FormLayout());
+
+		btnEsmmConsoleNotActive = new Button(composite_8, SWT.CHECK);
+		FormData fd_btnEsmmConsoleNotActive = new FormData();
+		fd_btnEsmmConsoleNotActive.top = new FormAttachment(0, 10);
+		fd_btnEsmmConsoleNotActive.left = new FormAttachment(0, 10);
+		btnEsmmConsoleNotActive.setLayoutData(fd_btnEsmmConsoleNotActive);
+		btnEsmmConsoleNotActive.setText("Disable Console");
+
+		btnLastDraw = new Button(composite_8, SWT.CHECK);
+		FormData fd_btnLastDraw = new FormData();
+		fd_btnLastDraw.top = new FormAttachment(btnEsmmConsoleNotActive, 6);
+		fd_btnLastDraw.left = new FormAttachment(btnEsmmConsoleNotActive, 0, SWT.LEFT);
+		btnLastDraw.setLayoutData(fd_btnLastDraw);
+		btnLastDraw.setText("Last draw");
+
+		btnNoData = new Button(composite_8, SWT.CHECK);
+		FormData fd_btnNoData = new FormData();
+		fd_btnNoData.top = new FormAttachment(btnLastDraw, 6);
+		fd_btnNoData.left = new FormAttachment(btnEsmmConsoleNotActive, 0, SWT.LEFT);
+		btnNoData.setLayoutData(fd_btnNoData);
+		btnNoData.setText("No data 204 Error");
+
+		btnFullDump = new Button(composite_8, SWT.CHECK);
+		FormData fd_btnFullDump = new FormData();
+		fd_btnFullDump.top = new FormAttachment(btnNoData, 6);
+		fd_btnFullDump.left = new FormAttachment(btnEsmmConsoleNotActive, 0, SWT.LEFT);
+		btnFullDump.setLayoutData(fd_btnFullDump);
+		btnFullDump.setText("Full dump");
+
+		Label lblNewLabel_2 = new Label(composite_8, SWT.NONE);
+		lblNewLabel_2.setImage(SWTResourceManager.getImage(AplWin.class, "/icons/small_pepa.png"));
+		FormData fd_lblNewLabel_2 = new FormData();
+		fd_lblNewLabel_2.top = new FormAttachment(70);
+		fd_lblNewLabel_2.bottom = new FormAttachment(100, -10);
+		fd_lblNewLabel_2.right = new FormAttachment(100, -33);
+		fd_lblNewLabel_2.left = new FormAttachment(0, 31);
+		lblNewLabel_2.setLayoutData(fd_lblNewLabel_2);
+		
+		textKenoDrawNum = new Text(composite_8, SWT.BORDER);
+		textKenoDrawNum.setText("1257");
+		FormData fd_textKenoDrawNum = new FormData();
+		fd_textKenoDrawNum.right = new FormAttachment(0, 68);
+		fd_textKenoDrawNum.top = new FormAttachment(btnFullDump, 6);
+		fd_textKenoDrawNum.left = new FormAttachment(0, 10);
+		textKenoDrawNum.setLayoutData(fd_textKenoDrawNum);
+		
+		Label lblKeno = new Label(composite_8, SWT.NONE);
+		FormData fd_lblKeno = new FormData();
+		fd_lblKeno.top = new FormAttachment(textKenoDrawNum, 3, SWT.TOP);
+		fd_lblKeno.left = new FormAttachment(textKenoDrawNum, 6);
+		lblKeno.setLayoutData(fd_lblKeno);
+		lblKeno.setText("Keno");
+		
+		textSzybkieDrawNum = new Text(composite_8, SWT.BORDER);
+		textSzybkieDrawNum.setText("1865");
+		FormData fd_textSzybkieDrawNum = new FormData();
+		fd_textSzybkieDrawNum.right = new FormAttachment(textKenoDrawNum, 0, SWT.RIGHT);
+		fd_textSzybkieDrawNum.top = new FormAttachment(textKenoDrawNum, 6);
+		fd_textSzybkieDrawNum.left = new FormAttachment(btnEsmmConsoleNotActive, 0, SWT.LEFT);
+		textSzybkieDrawNum.setLayoutData(fd_textSzybkieDrawNum);
+		
+		Label lblSzybkie = new Label(composite_8, SWT.NONE);
+		FormData fd_lblSzybkie = new FormData();
+		fd_lblSzybkie.right = new FormAttachment(textSzybkieDrawNum, 47, SWT.RIGHT);
+		fd_lblSzybkie.top = new FormAttachment(textSzybkieDrawNum, 3, SWT.TOP);
+		fd_lblSzybkie.left = new FormAttachment(textSzybkieDrawNum, 8);
+		lblSzybkie.setLayoutData(fd_lblSzybkie);
+		lblSzybkie.setText("Szybkie");
+		
+		Button btnIncKeno = new Button(composite_8, SWT.NONE);
+		btnIncKeno.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				String s = textKenoDrawNum.getText();
+				int i = Integer.parseInt(s) + 1;
+				setTextKenoDrawNum(i);
+			}
+		});
+		FormData fd_btnIncKeno = new FormData();
+		fd_btnIncKeno.left = new FormAttachment(0, 127);
+		fd_btnIncKeno.top = new FormAttachment(0, 96);
+		btnIncKeno.setLayoutData(fd_btnIncKeno);
+		btnIncKeno.setText("+");
+		
+		Button btnIncSzybkie = new Button(composite_8, SWT.NONE);
+		btnIncSzybkie.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				String s = textSzybkieDrawNum.getText();
+				int i = Integer.parseInt(s) + 1;
+				setTextSzybkieDrawNum(i);
+			}
+		});
+		FormData fd_btnIncSzybkie = new FormData();
+		fd_btnIncSzybkie.left = new FormAttachment(0, 127);
+		fd_btnIncSzybkie.top = new FormAttachment(0, 123);
+		btnIncSzybkie.setLayoutData(fd_btnIncSzybkie);
+		btnIncSzybkie.setText("+");
+		sashForm_4.setWeights(new int[] {648, 180});
+
+		TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
+		tbtmNewItem.setText("SSH Console");
+
+		Composite composite_24 = new Composite(tabFolder, SWT.NONE);
+		tbtmNewItem.setControl(composite_24);
+		composite_24.setLayout(new FillLayout(SWT.HORIZONTAL));
+
+		TabFolder tabFolder_5 = new TabFolder(composite_24, SWT.NONE);
+
+		tbtmSsh = new TabItem(tabFolder_5, SWT.NONE);
+		tbtmSsh.setImage(SWTResourceManager.getImage(AplWin.class, "/icons/RedBall.png"));
+		tbtmSsh.setText("SSH");
+
+		Composite composite_18 = new Composite(tabFolder_5, SWT.NONE);
+		tbtmSsh.setControl(composite_18);
+		composite_18.setLayout(new FormLayout());
+
+		sshConStyledText = new StyledText(composite_18, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+
+		// --- Ssh keys filter ---
+		sshConStyledText.addVerifyKeyListener(new VerifyKeyListener() {
+			public void verifyKey(VerifyEvent e) {
+				e.doit = true;
+
+				// allow clipboard copying
+				if ((e.stateMask & SWT.CTRL) == SWT.CTRL && (e.keyCode == 'c')) {
+					Apl.sshUi.sshSetCommand(new byte[] { (byte) 3 });
+					Apl.sshUi.sessionSetCommand("\n");
+					return;
+				}
+
+				// if cursor is before prompt - do nothing (no any edition before prompt)
+				if (!Apl.sshUi.amIinCommandLine())
+					e.doit = false;
+
+				// backspace only up to the prompt position - do nothing (no any edition before prompt)
+				if ((e.character == '\u0008' || e.character == '\u007F'))
+					if (Apl.sshUi.isCommandLineEmpty())
+						e.doit = false;
+
+				// execute what is in command line (and store it)
+				if (e.keyCode == '\r') {
+					Apl.sshUi.sessionSetCommand(Apl.sshUi.getCommandLine());
+					return;
+				}
+
+				// browse through last stored commands
+				if (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.ARROW_DOWN) {
+					Apl.sshUi.sshCommandLineUpDown(e.keyCode);
+					sshConStyledText.setCaretOffset(sshConStyledText.getText().length());
+					e.doit = false;
+				}
+
+				// browse throught predefined commands
+				if ((e.stateMask & SWT.CTRL) == SWT.CTRL && (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.ARROW_DOWN)) {
+					sshConStyledText.setCaretOffset(sshConStyledText.getText().length());
+					e.doit = false;
+				}
+
+				// allow tab completition (does not work as expected!)
+				if (e.keyCode == 0x09) {
+					//					Apl.sshUi.sshSetCommand(Apl.sshUi.getCommandLine().getBytes());
+					//					Apl.sshUi.sshSetCommand(new byte[] {(byte)0x09});
+					//					Apl.sshUi.sshSetCommand(new byte[] {'\n'});
+					e.doit = false;
+					return;
+				}
+
+			}
+		});
+
+		// --- Ssh Cursor listener ---
+		sshConStyledText.addCaretListener(new CaretListener() {
+			public void caretMoved(CaretEvent arg0) {
+				if (!btnMarking.getSelection())
+					Apl.sshUi.adjustCaret();
+			}
+		});
+
+		// --- Ssh search marking ---
+		sshConStyledText.addLineStyleListener(new LineStyleListener() {
+			public void lineGetStyle(LineStyleEvent event) {
+				String line = event.lineText;
+				LinkedList<StyleRange> list = new LinkedList<StyleRange>();
+
+				// 1
+				if (searchStringForSsh != null && searchStringForSsh.length() != 0) {
+					int cursor = -1;
+					while ((cursor = line.indexOf(searchStringForSsh, cursor + 1)) >= 0)
+						list.add(getHighlightStyle(event.lineOffset + cursor, searchStringForSsh.length()));
+					event.styles = (StyleRange[]) list.toArray(new StyleRange[list.size()]);
+				}
+
+				// 2
+				if (searchStringForSsh2 != null && searchStringForSsh2.length() != 0) {
+					int cursor = -1;
+					while ((cursor = line.indexOf(searchStringForSsh2, cursor + 1)) >= 0)
+						list.add(getHighlightStyle2(event.lineOffset + cursor, searchStringForSsh2.length()));
+					event.styles = (StyleRange[]) list.toArray(new StyleRange[list.size()]);
+				}
+
+			}
+		});
+
+		sshConStyledText.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_BLUE));
+		sshConStyledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		sshConStyledText.setFont(SWTResourceManager.getFont("Consolas", 9, SWT.NORMAL));
+		FormData fd_sshConStyledText = new FormData();
+		fd_sshConStyledText.top = new FormAttachment(0, 10);
+		fd_sshConStyledText.left = new FormAttachment(0, 10);
+		fd_sshConStyledText.right = new FormAttachment(100, -10);
+		sshConStyledText.setLayoutData(fd_sshConStyledText);
+
+		Composite composite_19 = new Composite(composite_18, SWT.BORDER);
+		fd_sshConStyledText.bottom = new FormAttachment(composite_19, -6);
+		composite_19.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		composite_19.setLayout(null);
+		FormData fd_composite_19 = new FormData();
+		fd_composite_19.top = new FormAttachment(100, -120);
+		fd_composite_19.bottom = new FormAttachment(100, -10);
+		fd_composite_19.left = new FormAttachment(0, 10);
+		fd_composite_19.right = new FormAttachment(100, -10);
+		composite_19.setLayoutData(fd_composite_19);
+
+		setSshIpText(new Text(composite_19, SWT.BORDER));
+
+		Label lblTerminalAddress = new Label(composite_19, SWT.NONE);
+		lblTerminalAddress.setBounds(93, 46, 65, 15);
+		lblTerminalAddress.setText("Terminal IP : ");
+
+		btnConnect = new Button(composite_19, SWT.CHECK);
+		btnConnect.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		btnConnect.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		btnConnect.setBounds(10, 14, 63, 16);
+		btnConnect.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Button button = (Button) e.widget;
+				if (button.getSelection()) {
+					if (!Apl.sshUi.sessionStart(getSshIpText().getText()))
+						button.setSelection(false);
+				}
+				else Apl.sshUi.stopSession();
+			}
+		});
+		btnConnect.setText("Connect");
+
+		Label lblUser = new Label(composite_19, SWT.NONE);
+		lblUser.setBounds(317, 46, 26, 15);
+		lblUser.setText("User:");
+
+		sshUserName = new Text(composite_19, SWT.BORDER);
+		sshUserName.setBounds(349, 43, 129, 21);
+
+		Label lblPassword = new Label(composite_19, SWT.NONE);
+		lblPassword.setBounds(484, 46, 53, 15);
+		lblPassword.setText("Password:");
+
+		sshPassword = new Text(composite_19, SWT.BORDER);
+		sshPassword.setBounds(543, 43, 132, 21);
+
+		Button btnNewButton_1 = new Button(composite_19, SWT.NONE);
+		btnNewButton_1.setBounds(681, 41, 63, 25);
+		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Apl.sshUi.save();
+			}
+		});
+		btnNewButton_1.setText("Save");
+
+		//		Label lblPrimaryEscIp = new Label(composite_19, SWT.NONE);
+		//		lblPrimaryEscIp.setBounds(10, 73, 167, 15);
+		//		lblPrimaryEscIp.setText("Primary ESC IP set command :");
+		//		
+		//		txtcfgmescprivip = new Text(composite_19, SWT.BORDER);
+		//		txtcfgmescprivip.setBounds(180, 70, 495, 21);
+		//		txtcfgmescprivip.setText("/usr/gtech/bin/cfg --mesc.pri_vip1");
+		//		
+		//		Button btnNewButton_6 = new Button(composite_19, SWT.NONE);
+		//		btnNewButton_6.setBounds(681, 68, 63, 25);
+		//		btnNewButton_6.addSelectionListener(new SelectionAdapter() {
+		//			@Override
+		//			public void widgetSelected(SelectionEvent arg0) {
+		//				if(!btnConnect.getSelection())
+		//					return;
+		//				String cmd;
+		//				cmd = txtcfgmescprivip.getText() + " " + Nif.getPrefferedIPAddress(); 
+		//				Apl.sshUi.sessionSetCommand(cmd);									
+		//			}
+		//		});
+		//		btnNewButton_6.setText("Set");
+
+		btnMarking = new Button(composite_19, SWT.CHECK);
+		btnMarking.setBounds(10, 45, 65, 16);
+		btnMarking.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (!btnMarking.getSelection()) {
+					getStyledText_5().setFocus();
+					getStyledText_5().setCaretOffset(getStyledText_5().getText().length());
+				}
+			}
+		});
+		btnMarking.setText("Marking");
+
+		Button btnColor = new Button(composite_19, SWT.NONE);
+		btnColor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				ColorDialog cd = new ColorDialog(shlEssim);
+				cd.setText("Terminal backgroud");
+				cd.setRGB(new RGB(255, 255, 255));
+				RGB newColor = cd.open();
+				if (newColor == null)
+					return;
+				getStyledText_5().setBackground(new Color(display, newColor));
+			}
+		});
+		btnColor.setBounds(681, 10, 63, 25);
+		btnColor.setText("Color");
+
+		Button btnFont = new Button(composite_19, SWT.NONE);
+		btnFont.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				FontDialog dlg = new FontDialog(shlEssim);
+				dlg.setFontList(getStyledText_5().getFont().getFontData());
+				dlg.setRGB(getStyledText_5().getForeground().getRGB());
+				FontData fontData = dlg.open();
+				if (fontData != null) {
+					getStyledText_5().setFont(new Font(shlEssim.getDisplay(), fontData));
+					getStyledText_5().setForeground(new Color(shlEssim.getDisplay(), dlg.getRGB()));
+				}
+			}
+		});
+		btnFont.setBounds(612, 12, 63, 25);
+		btnFont.setText("Font");
+
+		Label lblWinscpPath = new Label(composite_19, SWT.NONE);
+		lblWinscpPath.setBounds(93, 73, 81, 15);
+		lblWinscpPath.setText("WinScp path :");
+
+		winScpText = new Text(composite_19, SWT.BORDER);
+		winScpText.setBounds(180, 70, 495, 21);
+
+		Button btnNewButton_2 = new Button(composite_19, SWT.NONE);
+		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				Apl.sshUi.runWinScp();
+			}
+		});
+		btnNewButton_2.setBounds(681, 72, 63, 25);
+		btnNewButton_2.setText("Run");
+
+		Button btnNewButton_9 = new Button(composite_19, SWT.NONE);
+		btnNewButton_9.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				Apl.sshUi.conClear();
+			}
+		});
+		btnNewButton_9.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		btnNewButton_9.setBounds(543, 12, 63, 25);
+		btnNewButton_9.setText("Clear");
+
+		textSearach1 = new Text(composite_19, SWT.BORDER);
+		textSearach1.setBackground(SWTResourceManager.getColor(SWT.COLOR_YELLOW));
+		textSearach1.setBounds(180, 10, 131, 21);
+
+		textSearach1.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				Text text = (Text) event.widget;
+				searchStringForSsh = text.getText().length() > 2 ? text.getText() : "";
+				sshConStyledText.redraw();
+			}
+		});
+
+		Label lblSearch = new Label(composite_19, SWT.NONE);
+		lblSearch.setBounds(93, 15, 45, 15);
+		lblSearch.setText("Search :");
+
+		textSearch2 = new Text(composite_19, SWT.BORDER);
+		textSearch2.setBackground(SWTResourceManager.getColor(SWT.COLOR_GREEN));
+		textSearch2.setBounds(349, 10, 131, 21);
+		
+		TabItem tbtmNewItem_2 = new TabItem(tabFolder, SWT.NONE);
+		tbtmNewItem_2.setText("BT Winchecker");
+		
+		SashForm sashForm_3 = new SashForm(tabFolder, SWT.VERTICAL);
+		tbtmNewItem_2.setControl(sashForm_3);
+		
+		Composite composite_22 = new Composite(sashForm_3, SWT.NONE);
+		composite_22.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		composite_22.setLayout(new FormLayout());
+		
+		table_1 = new Table(composite_22, SWT.BORDER | SWT.FULL_SELECTION);
+		FormData fd_table_1 = new FormData();
+		fd_table_1.top = new FormAttachment(0, 10);
+		fd_table_1.left = new FormAttachment(0, 10);
+		fd_table_1.right = new FormAttachment(100, -10);
+		table_1.setLayoutData(fd_table_1);
+		table_1.setHeaderVisible(true);
+		table_1.setLinesVisible(true);
+		
+		TableColumn tblclmnNewColumn_1 = new TableColumn(table_1, SWT.NONE);
+		tblclmnNewColumn_1.setWidth(100);
+		tblclmnNewColumn_1.setText("MAC");
+		
+		TableColumn tblclmnNewColumn_2 = new TableColumn(table_1, SWT.NONE);
+		tblclmnNewColumn_2.setWidth(200);
+		tblclmnNewColumn_2.setText("Name");
+		
+		TableColumn tblclmnNewColumn = new TableColumn(table_1, SWT.NONE);
+		tblclmnNewColumn.setToolTipText("");
+		tblclmnNewColumn.setWidth(40);
+		tblclmnNewColumn.setText("EPP");
+		
+		TableColumn tblclmnNewColumn_3 = new TableColumn(table_1, SWT.NONE);
+		tblclmnNewColumn_3.setWidth(300);
+		tblclmnNewColumn_3.setText("Status");
+		
+		Composite composite_25 = new Composite(composite_22, SWT.NONE);
+		fd_table_1.bottom = new FormAttachment(100, -99);
+		FormData fd_composite_25 = new FormData();
+		fd_composite_25.top = new FormAttachment(table_1, 6);
+		fd_composite_25.left = new FormAttachment(0, 10);
+		fd_composite_25.bottom = new FormAttachment(100);
+		composite_25.setLayoutData(fd_composite_25);
+		
+		Button btnNewButton = new Button(composite_25, SWT.NONE);
+		btnNewButton.setForeground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+		btnNewButton.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		btnNewButton.setToolTipText("Start discovering BT devices");
+		btnNewButton.setBounds(0, 0, 58, 25);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				Apl.btClient.startDiscovery(getUuidText());
+			}
+		});
+		btnNewButton.setText("Discover");
+		
+		Button btnConnect_1 = new Button(composite_25, SWT.NONE);
+		btnConnect_1.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		btnConnect_1.setToolTipText("Connect to the selcected BT device  (it should be a Winchecker)");
+		btnConnect_1.setBounds(0, 31, 58, 25);
+		btnConnect_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				TableItem[] ti = table_1.getSelection();
+				if (ti.length == 0) {
+					Apl.frogSUi.smallBtConPrintln("no selected BT device!");
+					return;
+				}
+				RemoteDevice remoteDevice = (RemoteDevice) ti[0].getData();				
+				Apl.btClient.openConnection(remoteDevice, getPinText().getText().trim(), null);
+			}
+		});
+		btnConnect_1.setText("Connect");
+		
+		pinText = new Text(composite_25, SWT.BORDER);
+		pinText.setToolTipText("BT PIN");
+		pinText.setText("GTech-WinChecker");
+		pinText.setBounds(64, 33, 239, 21);
+		
+		Button btnStop = new Button(composite_25, SWT.NONE);
+		btnStop.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		btnStop.setToolTipText("Stop the Winchecker thread");
+		btnStop.setBounds(255, 0, 58, 25);
+		btnStop.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				Apl.btClient.closeConnection();
+			}
+		});
+		btnStop.setText("Stop");
+		
+		Composite composite_26 = new Composite(composite_22, SWT.NONE);
+		fd_composite_25.right = new FormAttachment(composite_26, -6);
+		composite_26.setLayout(new FormLayout());
+		FormData fd_composite_26 = new FormData();
+		fd_composite_26.top = new FormAttachment(table_1, 6);
+		fd_composite_26.bottom = new FormAttachment(100, -3);
+		fd_composite_26.left = new FormAttachment(0, 329);
+		fd_composite_26.right = new FormAttachment(100, -10);
+		
+		Button btnNewButton_5 = new Button(composite_25, SWT.NONE);
+		btnNewButton_5.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+					TableItem[] ti = table_1.getSelection();
+					if (ti.length == 0) {
+						Apl.frogSUi.smallBtConPrintln("no selected BT device!");
+						return;
+					}
+					RemoteDevice remoteDevice = (RemoteDevice) ti[0].getData();				
+					Apl.btClient.scanForServices(remoteDevice);
+				}			
+		});
+		btnNewButton_5.setToolTipText("Scan available services");
+		btnNewButton_5.setBounds(64, 0, 58, 25);
+		btnNewButton_5.setText("Services ");
+		
+		Button btnConnect_2 = new Button(composite_25, SWT.NONE);
+		btnConnect_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				TableItem[] ti = table_1.getSelection();
+				if (ti.length == 0) {
+					Apl.frogSUi.smallBtConPrintln("no selected BT device!");
+					return;
+				}
+				RemoteDevice remoteDevice = (RemoteDevice) ti[0].getData();				
+				Apl.btClient.openConnection(remoteDevice, getPinText().getText().trim(), getUuidText().getText().trim());
+			}
+		});
+		btnConnect_2.setBounds(0, 62, 58, 25);
+		btnConnect_2.setText("Connect");
+		
+		uuidText = new Text(composite_25, SWT.BORDER);
+		uuidText.setText("c9ddc0da-d0e5-4af4-a2df-18379f960e06");
+		uuidText.setBounds(64, 64, 239, 21);
+		composite_26.setLayoutData(fd_composite_26);
+		
+		Button btnNewButton_4 = new Button(composite_26, SWT.NONE);
+		btnNewButton_4.setToolTipText("Display two lines of text on the connected Winchecker");
+		FormData fd_btnNewButton_4 = new FormData();
+		fd_btnNewButton_4.width = 58;
+		fd_btnNewButton_4.top = new FormAttachment(0);
+		fd_btnNewButton_4.left = new FormAttachment(0);
+		btnNewButton_4.setLayoutData(fd_btnNewButton_4);
+		btnNewButton_4.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				display.syncExec(new Runnable() {
+					@Override
+					public void run() {
+						Apl.btClient.displayText(eppText_1.getText(), eppText_2.getText());
+					}
+				});
+			}
+		});
+		btnNewButton_4.setText("Display");
+		
+		eppText_1 = new Text(composite_26, SWT.BORDER);
+		eppText_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		FormData fd_eppText_1 = new FormData();
+		fd_eppText_1.bottom = new FormAttachment(0, 27);
+		fd_eppText_1.top = new FormAttachment(0, 2);
+		fd_eppText_1.right = new FormAttachment(100);
+		eppText_1.setLayoutData(fd_eppText_1);
+		
+		eppText_2 = new Text(composite_26, SWT.BORDER);
+		eppText_2.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		FormData fd_eppText_2 = new FormData();
+		fd_eppText_2.top = new FormAttachment(eppText_1, 6);
+		fd_eppText_2.height = 20;
+		fd_eppText_2.right = new FormAttachment(100);
+		eppText_2.setLayoutData(fd_eppText_2);
+		
+		Label lblLine_1 = new Label(composite_26, SWT.NONE);
+		fd_eppText_2.left = new FormAttachment(lblLine_1, 6);
+		FormData fd_lblLine_1 = new FormData();
+		lblLine_1.setLayoutData(fd_lblLine_1);
+		lblLine_1.setText("Line 2");
+		
+		Label lblLine = new Label(composite_26, SWT.NONE);
+		fd_lblLine_1.top = new FormAttachment(lblLine, 16);
+		fd_eppText_1.left = new FormAttachment(lblLine, 6);
+		fd_lblLine_1.left = new FormAttachment(lblLine, 0, SWT.LEFT);
+		FormData fd_lblLine = new FormData();
+		fd_lblLine.top = new FormAttachment(btnNewButton_4, 5, SWT.TOP);
+		fd_lblLine.left = new FormAttachment(btnNewButton_4, 6);
+		lblLine.setLayoutData(fd_lblLine);
+		lblLine.setText("Line 1");
+		
+		Composite composite_23 = new Composite(sashForm_3, SWT.NONE);
+		composite_23.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		composite_23.setLayout(new FormLayout());
+		
+		styledText = new StyledText(composite_23, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		styledText.setMarginColor(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+		styledText.setFont(SWTResourceManager.getFont("Lucida Console", 9, SWT.NORMAL));
+		FormData fd_styledText = new FormData();
+		fd_styledText.top = new FormAttachment(0, 10);
+		fd_styledText.left = new FormAttachment(0, 10);
+		fd_styledText.right = new FormAttachment(100, -10);
+		styledText.setLayoutData(fd_styledText);
+	
+		
+		Button btnNewButton_3 = new Button(composite_23, SWT.NONE);
+		btnNewButton_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				styledText.selectAll();
+				styledText.cut();
+			}
+		});
+		fd_styledText.bottom = new FormAttachment(btnNewButton_3, -6);
+		FormData fd_btnNewButton_3 = new FormData();
+		fd_btnNewButton_3.left = new FormAttachment(100, -62);
+		fd_btnNewButton_3.bottom = new FormAttachment(100, -10);
+		fd_btnNewButton_3.right = new FormAttachment(100, -10);
+		btnNewButton_3.setLayoutData(fd_btnNewButton_3);
+		btnNewButton_3.setText("Clear");
+		sashForm_3.setWeights(new int[] {295, 154});
+
+		textSearch2.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				Text text = (Text) event.widget;
+				searchStringForSsh2 = text.getText().length() > 2 ? text.getText() : "";
+				sshConStyledText.redraw();
+			}
+		});
+		//sashForm.setWeights(new int[] {391, 627, 156});
+		Font font = new Font(Display.getDefault(), "Arial", 10, SWT.NORMAL);
+
+		shlEssim.open();
+		shlEssim.layout();
+	}
+
+	public void start() {
+		while (!shlEssim.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+	}
+
+	public StyledText getStyledText_3() {
+		return mainConStyledText;
+	}
+
+	public Button getBtnCheckButton() {
+		return btnCheckButton;
+	}
+
+	public StyledText getStyledText_5() {
+		return sshConStyledText;
+	}
+
+	public Text getTxtRegularPort() {
+		return txtRegularPort;
+	}
+
+	public Button getBtnRun() {
+		return btnEsConnectServerActive;
+	}
+
+	public Text getTabletIP() {
+		return txtTabletIP;
+	}
+
+	public Text getTxtKeepAlivePort() {
+		return txtKeepAlivePort;
+	}
+
+	public Text getSshUserName() {
+		return sshUserName;
+	}
+
+	public Text getSshPassword() {
+		return sshPassword;
+	}
+
+	public Text getSshIPText() {
+		return getSshIpText();
+	}
+
+	public Text getSshIpText() {
+		return terminalIpText;
+	}
+
+	public void setSshIpText(Text text) {
+		this.terminalIpText = text;
+		text.setBounds(180, 43, 131, 21);
+	}
+
+	public Table getTable() {
+		return table;
+	}
+
+	public Button getBtnMarking() {
+		return btnMarking;
+	}
+
+	public StyledText getEscpServerSmallCon() {
+		return smallConStyledText;
+	}
+
+	public Slider getRespDelaySlider() {
+		return respDelaySlider;
+	}
+
+	public Text getWinScpPath() {
+		return winScpText;
+	}
+
+	private StyleRange getHighlightStyle(int startOffset, int length) {
+		StyleRange styleRange = new StyleRange();
+		styleRange.start = startOffset;
+		styleRange.length = length;
+		styleRange.background = display.getSystemColor(SWT.COLOR_YELLOW);
+		return styleRange;
+	}
+
+	private StyleRange getHighlightStyle2(int startOffset, int length) {
+		StyleRange styleRange = new StyleRange();
+		styleRange.start = startOffset;
+		styleRange.length = length;
+		styleRange.background = display.getSystemColor(SWT.COLOR_GREEN);
+		return styleRange;
+	}
+
+	public StyledText getBackConStyledText() {
+		return backConStyledText;
+	}
+
+	public Button getBtnConnect() {
+		return btnConnect;
+	}
+
+	public Label getLblProductFilter() {
+		return lblProductFilter;
+	}
+
+	Group			ret;
+	int				retI;
+	private Group	grpSessionClose;
+	private Group	grpFinancialTransaction;
+	private Group	grpPing;
+	private Group	grpValidationInquiry;
+	private Button	btnDoNotRespond;
+
+	public Group getGrpSessionOpen() {
+		return grpSessionOpen;
+	}
+
+	public Group getGrpSessionClose() {
+		return grpSessionClose;
+	}
+
+	public Group getGrpFinancialTransaction() {
+		return grpFinancialTransaction;
+	}
+
+	public Group getGrpPing() {
+		return grpPing;
+	}
+
+	public Group getGrpValidationInquiry() {
+		return grpValidationInquiry;
+	}
+
+	public int getGrpSessionOpenIndex() {
+		getIndex(_grpSessionOpen);
+		return retI;
+	}
+
+	public int getGrpSessionCloseIndex() {
+		getIndex(_grpSessionClose);
+		return retI;
+	}
+
+	public int getGrpFinancialTransactionIndex() {
+		getIndex(_grpFinancialTransaction);
+		return retI;
+	}
+
+	public int getGrpPingIndex() {
+		getIndex(_grpPing);
+		return retI;
+	}
+
+	public int getGrpValidationInquiryIndex() {
+		getIndex(_grpValidationInquiry);
+		return retI;
+	}
+
+	private void getIndex(MyGroup grp) {
+		Button[] btn = grp.getButtons();
+		retI = 0;
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				int i = 0;
+				for (Button b : btn) {
+					if (b.getSelection())
+						retI = i;
+					i++;
+				}
+			}
+		});
+	}
+
+	private boolean		doNotResp;
+	private Label		lblNewLabel_1;
+	private Label		label;
+	private StyledText	esmmConStyledText;
+	private Text		textEsmmPort;
+
+	public boolean getDoNotRespond() {
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				doNotResp = btnDoNotRespond.getSelection();
+			}
+		});
+		return doNotResp;
+	}
+
+	public Label getLblReachable() {
+		return lblNewLabel_1;
+	}
+
+	public Label getLLblScanLoop() {
+		return label;
+	}
+
+	public void setLblScanLoopText(String s) {
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				label.setText(s);
+			}
+		});
+	}
+
+	public StyledText getESMMText() {
+		return esmmConStyledText;
+	}
+
+	Text ts = null;
+	public Text getTextEsmmPort() {
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				ts = textEsmmPort;
+			}
+		});
+		return ts;
+	}
+
+	public Button getBtnEsmmConsoleNotActive() {
+		return btnEsmmConsoleNotActive;
+	}
+
+	private boolean		esmmConsloeNotActive;
+	private Button		btnLastDraw;
+	private Button		btnNoData;
+	private Text		textKenoMins;
+	private Text		textKenoSecs;
+	private Button		btnResetKenoDrawTime;
+	private Button		btnFullDump;
+	private StyledText	backReqStyledText;
+	private StyledText	backSmallConStyledText;
+	private StyledText	backRespStyledText;
+	private Text		textBackRemotePort;
+	private Text		textBackLocalPort;
+	private Button		chkBackServer;
+	private Label		lblBackRemoteRealPort;
+	private StyledText	pingRespStyledText;
+	private StyledText	pingReqStyledText;
+	private StyledText	noteReqStyledText;
+	private Text textKenoDrawNum;
+	private Text textSzybkieDrawNum;
+
+	public boolean getBtnEsmmConsoleNotActiveValue() {
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				esmmConsloeNotActive = btnEsmmConsoleNotActive.getSelection();
+			}
+		});
+		return esmmConsloeNotActive;
+	}
+
+	public Button getBtnLastDraw() {
+		return btnLastDraw;
+	}
+
+	public Button getBtnNoData() {
+		return btnNoData;
+	}
+
+	public Text getTextKenoMins() {
+		return textKenoMins;
+	}
+
+	public Text getTextKenoSecs() {
+		return textKenoSecs;
+	}
+
+	public Button getBtnResetKenoDrawTime() {
+		return btnResetKenoDrawTime;
+	}
+
+	public Button getBtnResetSzybkieDrawTime() {
+		return btnResetSzybkieDrawTime;
+	}
+
+	public Button getBtnFullDump() {
+		return btnFullDump;
+	}
+
+	public StyledText getBackReqStyledText() {
+		return backReqStyledText;
+	}
+
+	public StyledText getBackSmallConStyledText() {
+		return backSmallConStyledText;
+	}
+
+	public StyledText getBackRespStyledText() {
+		return backRespStyledText;
+	}
+
+	public Text getTextBackRemotePort() {
+		return textBackRemotePort;
+	}
+
+	public Text getTextBackLocalPort() {
+		return textBackLocalPort;
+	}
+
+	public Button getChkBackServer() {
+		return chkBackServer;
+	}
+
+	public Label getLblBackRemoteRealPort() {
+		return lblBackRemoteRealPort;
+	}
+
+	public StyledText getPingRespStyledText() {
+		return pingRespStyledText;
+	}
+
+	public StyledText getPingReqStyledText() {
+		return pingReqStyledText;
+	}
+	
+	public StyledText getNoteReqStyledText() {
+		return noteReqStyledText;
+	}
+	String sr = "";
+	public Table table_1;
+
+	private Text eppText_2;
+	private Text eppText_1;
+	private Text pinText;
+	private Text textShowPath;
+	private Text uuidText;
+	public String getTextKenoDrawNum() {
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				sr = textKenoDrawNum.getText();
+			}
+		});
+		return sr; 
+	}
+	public void setTextKenoDrawNum(int i) {
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				String s = String.format("%d", i);
+				textKenoDrawNum.setText(s);
+			}
+		});
+	}
+	public String getTextSzybkieDrawNum() {
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				sr = textSzybkieDrawNum.getText();
+			}
+		});		
+		return sr;
+	}
+	public String getTextShowDir() {
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				sr = textShowPath.getText();
+			}
+		});		
+		return sr;
+	}		
+	public void setTextSzybkieDrawNum(int i) {
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				String s = String.format("%d", i);
+				textSzybkieDrawNum.setText(s);
+			}
+		});
+	}	
+	public StyledText getBtSmallCon() {
+		return styledText;
+	}
+	public Text getPinText() {
+		return pinText;
+	}
+	public Text getUuidText() {
+		return uuidText;
+	}
+	public Text getTextShowPath() {
+		return textShowPath;
+	}
+}

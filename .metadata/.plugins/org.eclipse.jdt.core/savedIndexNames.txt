@@ -1,0 +1,6 @@
+INDEX VERSION 1.131+C:\Users\SDABROWIECKI\workspace_CLIPBOARD\.metadata\.plugins\org.eclipse.jdt.core
+3188548288.index
+2328269416.index
+332383186.index
+2501520862.index
+1482982939.index

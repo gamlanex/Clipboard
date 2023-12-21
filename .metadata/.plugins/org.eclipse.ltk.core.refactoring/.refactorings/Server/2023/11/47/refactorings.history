@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;dName&apos; in &apos;server.responders.Resp_ClipPaste.getResp(...)&apos; to &apos;pasteContents&apos;&#x0D;&#x0A;- Original project: &apos;Server&apos;&#x0D;&#x0A;- Original element: &apos;server.responders.Resp_ClipPaste.getResp(String, HttpResp).dName&apos;&#x0D;&#x0A;- Renamed element: &apos;dName&apos;&#x0D;&#x0A;- Update references to refactored element" description="Rename local variable &apos;dName&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;server.responders{Resp_ClipPaste.java[Resp_ClipPaste~getResp~QString;~QHttpResp;@dName!791!810!798!802!QString;!0!false" name="pasteContents" references="true" stamp="1701032452039" version="1.0"/>
+</session>
