@@ -22,22 +22,29 @@ public class ClipboardServer extends Thread implements DataSender {
 	private volatile boolean stop;
 	private volatile boolean disabled = false;
 
-	public ClipboardServer(String name, InetAddress inetAddress, int port, String remoteAddress, int remotePort) {
+	public ClipboardServer(String name, InetAddress myAddress, int myPort, String remoteAddress, int remotePort) {
 
 		this.name = name;
 		this.remoteAddress = remoteAddress;
 		this.remotePort = remotePort;
+		
+		if (remoteAddress == null) {
+			System.err.println("\nNo remote address, exiting !!!");
+			System.exit(1);
+		}
 
-		System.out.println("\n- Creating " + name + " server -");
-
+		System.out.println("\n- Creating " + name + " server -\n");
+		
+		System.out.println("- Remote address\t" + remoteAddress + ":" + remotePort);
+		
 		try {
 
-			serverSocket = createServerSocket(inetAddress, port);
+			serverSocket = createServerSocket(myAddress, myPort);
 
 			if (serverSocket == null) {
 				System.err.println("Error: Socket creation error!");
 				return;
-			}
+			}  
 
 			// System.out.println("- Binding " + name + "\tserver socket to: " + inetAddress
 			// + " Port: " + port);
@@ -63,9 +70,6 @@ public class ClipboardServer extends Thread implements DataSender {
 	public void run() {
 
 		try {
-
-			System.err.println("- Starting server: " + name);
-
 			stop = false;
 
 			while (!stop) {
@@ -75,7 +79,7 @@ public class ClipboardServer extends Thread implements DataSender {
 					continue;
 				}
 
-				System.out.println("- Server: " + name + "\twaiting for connection");
+				System.out.println("- Server: " + name + " waiting for connection");
 
 				(new ClipboardReqestHandler()).handleRequest(serverSocket.accept());
 			}
@@ -83,9 +87,7 @@ public class ClipboardServer extends Thread implements DataSender {
 		} catch (IOException e) {
 			System.err.println("Error: Server " + name + "Connection error : " + e.getMessage());
 		} finally {
-
 			System.err.println("- Stopping " + name + " server (pending requests will be finished)");
-
 			try {
 				if (serverSocket != null) {
 					System.err.println("- Closing " + name + " server socket");
@@ -107,15 +109,14 @@ public class ClipboardServer extends Thread implements DataSender {
 		disabled = b;
 	}
 
-	private ServerSocket createServerSocket(InetAddress inetAddress, int serverPort) throws IOException {
+	private ServerSocket createServerSocket(InetAddress myAddress, int myPort) throws IOException {
 
-		System.out.println("\tCreating socket, address: " + inetAddress.getHostAddress() + " port " + serverPort);
-
+		System.out.println("- My address\t\t" + myAddress.getHostAddress() + ":" + myPort);
 		ServerSocket socket = null;
 
 		try {
 			socket = new ServerSocket();
-			socket.bind(new InetSocketAddress(inetAddress, serverPort));
+			socket.bind(new InetSocketAddress(myAddress, myPort));
 			
 		} catch (IOException | SecurityException | IllegalArgumentException e) {
 			System.err.println("Error creating plain socket: " + e);
@@ -130,20 +131,20 @@ public class ClipboardServer extends Thread implements DataSender {
 	public void send(String data) {
 
 		try {
+			System.out.println("send out, to: " + remoteAddress + ":" + remotePort);
+			
 			@SuppressWarnings("resource")
 			Socket socket = new Socket(remoteAddress, remotePort);
 		
+			System.out.println("send out - 2");			
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			
+			System.out.println("send out - data:\n" + data);
 			
 			out.println(data);
 
-//			// Receive response from the server
-//			String serverResponse = in.readLine();
-//			System.out.println("Server response: " + serverResponse);
-			
 		} catch (UnknownHostException e) {
-			System.err.println("Unknown host: " + remoteAddress);
+			System.err.println("Unknsend outost: " + remoteAddress);
 		} catch (IOException e) {
 			System.err.println("Error connecting to the server: " + e.getMessage());
 		}

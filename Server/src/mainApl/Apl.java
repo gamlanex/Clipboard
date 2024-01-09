@@ -10,11 +10,11 @@ import utils.Nif;
 public class Apl {
 	
 	public static final String  				VERSION 				= "1.0";	
-	public static int 							servicePort 			= 8085;		
+	public static int 							myPort 					= 8084;
+	public static int 							remotePort				= myPort;	
 	public static ClipboardServer				clipboardServer			= null;	
 	public static ClipboardObserver				clipboardObserver		= null;	
 	public static String						remoteAddress;
-	public static int 							remotePort				= 8085;
 
 	
 	public static boolean parseCommandLineAndSetValues(String[] args) {		
@@ -41,17 +41,27 @@ public class Apl {
 					System.err.println("Error: - n requires a network interface name");
 			}
 			
-			else if (arg.equals("p") || arg.equals("port")) {
+			else if (arg.equals("p1") || arg.equals("port1")) {
 				if (i < args.length)
 					try {
-						servicePort		= Integer.parseInt(args[i++]);	
+						myPort	= Integer.parseInt(args[i++]);
+					}
+					catch(Exception e) {
+						System.err.println("Error: can not parse port number!");	
+					}				
+			}
+
+			else if (arg.equals("p2") || arg.equals("port2")) {
+				if (i < args.length)
+					try {
+						remotePort	= Integer.parseInt(args[i++]);
 					}
 					catch(Exception e) {
 						System.err.println("Error: can not parse port number!");	
 					}				
 			}
 			
-			else if (arg.equals("remote")) {
+			else if (arg.equals("r") || arg.equals("remote")) {
 				if (i < args.length)
 					try {
 						remoteAddress = args[i++];
@@ -79,13 +89,13 @@ public class Apl {
 	}
 	
 	public static void displayNetworkInformation() {
-		System.out.println("Available network intefaces:\n" +  Nif.check());
+		System.out.println("My address:  " +  Nif.getPrefferedIPAddress());
+		System.out.println("My port:     " +  myPort);
 	}
 	
 	public static void displayHelpInformation() {
 		System.out.println("Command line options: ");
-		System.out.println("\t-port PORT NUMBER         - port number the server wil be listening on  (the default is: 8080)" );
-		System.out.println("\t-path PATH                - the full path where response files are located (the default is server current directory)" );
+		System.out.println("\t-port PORT NUMBER         - port number the server wil be listening on (the default is: " + myPort + ")" );
 		System.out.println("\t-n NETWORK INTERFACE NAME - the name of the network interface name which will be used (listed below)" );
 		System.out.println("");		
 	}

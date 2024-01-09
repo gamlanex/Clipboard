@@ -13,12 +13,13 @@ public class Main {
 		if (!Apl.parseCommandLineAndSetValues(args))
 			return;
 		
-		Apl.clipboardServer = new ClipboardServer("Clipboard", Nif.getPrefferedIPAddress(),  Apl.servicePort+1, Apl.remoteAddress, Apl.remotePort);							
+		Apl.clipboardServer = new ClipboardServer("Clipboard", Nif.getPrefferedIPAddress(),  Apl.myPort, Apl.remoteAddress, Apl.remotePort);							
 		Apl.clipboardServer.start();
 
 		Apl.clipboardObserver = new ClipboardObserver(Apl.clipboardServer);
 		Apl.clipboardObserver.startMonitoring();
 	}
 
+	
 	
 }

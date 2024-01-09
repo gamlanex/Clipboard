@@ -17,14 +17,14 @@ public class ClipboardObserver {
 
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-	    if (dataSender == null) {
-	      	return;
-	    }
+		if (dataSender == null) {
+			return;
+		}
 
 		clipboard.addFlavorListener(e -> {
-			
+
 			System.out.println("Clipboard content changed!");
-			
+
 			try {
 
 				Transferable contents = clipboard.getContents(null);
@@ -32,16 +32,14 @@ public class ClipboardObserver {
 				if (contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
 					String clipboardText = (String) contents.getTransferData(DataFlavor.stringFlavor);
 					System.out.println("New clipboard content: " + clipboardText);
-                    dataSender.send(clipboardText);
+					dataSender.send(clipboardText);
 				}
 
 			} catch (Exception ex) {
 				System.out.println("Error fetching clipboard data:" + ex);
-				//e.printStackTrace();
+				// e.printStackTrace();
 			}
 		});
-
-		System.out.println("Clipboard monitoring started. Press CTRL+C to stop.");
 
 	}
 
